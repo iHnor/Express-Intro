@@ -1,0 +1,30 @@
+{
+  "type": "module",
+  "name": "todolist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "LogicToDo.js",
+  "scripts": {
+    "start": "nodemon Express-Intro/ToDoServer.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iHnor/Express-Intro.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iHnor/Express-Intro/issues"
+  },
+  "homepage": "https://github.com/iHnor/Express-Intro#readme",
+  "devDependencies": {
+    "jest": "^27.0.6",
+    "nodemon": "^2.0.12"
+  },
+  "dependencies": {
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.8",
+    "babel-jest": "^27.0.6",
+    "express": "^4.17.1"
+  }
+}
