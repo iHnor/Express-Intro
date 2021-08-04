@@ -26,8 +26,8 @@ function write() {
         res.send(update)
     });
 
-    router.delete('/', function (req, res) {
-        let del = controller.deleteTask()
+    router.delete('/:id', function (req, res) {
+        let del = controller.deleteTask(req.params.id)
         res.send(del);
     });
 
