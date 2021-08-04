@@ -1,7 +1,10 @@
-let index = 1
+
+const inc = (index = 0) => () => ++index
+const genId = inc()
+
 const todoitems = [
-    { id: index++, name: 'Test task', done: false },
-    { id: index++, name: 'We create new task', done: false }
+    { id: genId(), name: 'Test task', done: false },
+    { id: genId(), name: 'We create new task', done: false }
 ]
 
 
@@ -18,7 +21,7 @@ class ToDO {
 
     createTask(data) {
         let newitem = {
-            id: index++,
+            id: genId(),
             name: data.name,
             done: false
         };
@@ -35,12 +38,8 @@ class ToDO {
 
     delete(taskId){
         let taskIdInt = parseInt(taskId);
-        todoitems.splice(taskIdInt-1, 1);
-        index--
-
-        for(let i = taskIdInt-1; i < todoitems.length; i++){
-            todoitems[i].id -= 1; 
-        }
+        todoitems.splice(taskIdInt-1,1);
+        console.log(todoitems);
         return todoitems
     }
 }
