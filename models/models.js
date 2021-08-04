@@ -1,9 +1,7 @@
-
-const inc = (index = 0) => () => ++index
-const genId = inc()
+let index = 1
 const todoitems = [
-    { id: genId(), name: 'Test task', done: false },
-    { id: genId(), name: 'We create new task', done: false }
+    { id: index++, name: 'Test task', done: false },
+    { id: index++, name: 'We create new task', done: false }
 ]
 
 
@@ -20,7 +18,7 @@ class ToDO {
 
     createTask(data) {
         let newitem = {
-            id: genId(),
+            id: index++,
             name: data.name,
             done: false
         };
@@ -30,35 +28,21 @@ class ToDO {
     update(taskId, NewUpdateTask) {
 
         let taskIdInt = parseInt(taskId);
-        // console.log(taskIdInt);
         let updateItem = todoitems.find(t => t.id === taskIdInt);
         Object.assign(updateItem, NewUpdateTask);
         return updateItem;
     }
+
+    delete(taskId){
+        let taskIdInt = parseInt(taskId);
+        todoitems.splice(taskIdInt-1, 1);
+        index--
+
+        for(let i = taskIdInt-1; i < todoitems.length; i++){
+            todoitems[i].id -= 1; 
+        }
+        return todoitems
+    }
 }
 
 module.exports = new ToDO()
-
-
-
-// router.get('/todoitems', (req, res) => res.json(todoitems))
-
-// router.post('/todoitems', (req, res) => {
-//     const todoitem = createTask(req.body)
-//     todoitems.push(todoitem)
-//     res.json(todoitem)
-// })
-
-// router.patch('/todoitems/:id', (req, res) => {
-//     const todoitemId = parseInt(req.params.id)
-//     const todoitem = todoitems.find(t => t.id === todoitemId)
-//     if (todoitem) {
-//         Object.assign(todoitem, req.body)
-//         res.json(todoitem)
-//     }
-//     else {
-//         res.status(404).json({ error: 'Task not found' })
-//     }
-// })
-
-// module.exports = router
