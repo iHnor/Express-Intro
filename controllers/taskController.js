@@ -17,8 +17,8 @@ class TaskController {
         return ToDO.update(taskId, NewUpdateTask);
     }
 
-    deleteTask() {
-        console.log('5');
+    deleteTask(taskId) {
+        return ToDO.delete(taskId)
     }
 }
 
