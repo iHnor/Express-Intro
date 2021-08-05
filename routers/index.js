@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router();
 
-const task = require('./tasks')
+const task = require('./lists')
 
 router
-  .use('/tasks', task)
+  .use('/lists', task)
 //   .use('/meetups', meetups)
 
 module.exports = router
