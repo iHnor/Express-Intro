@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const controller = require('../controllers/taskController')
+const controller = require('../controllers/taskController');
 
 function read() {
 
@@ -25,6 +25,11 @@ function write() {
         let update = controller.updateTask(req.params.id, req.body)
         res.send(update)
     });
+
+    router.put('/:id', function (req, res){
+        let changeTask = controller.changeTask(req.params.id, req.body)
+        res.send(changeTask)
+    })
 
     router.delete('/:id', function (req, res) {
         let del = controller.deleteTask(req.params.id)
