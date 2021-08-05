@@ -1,33 +1,37 @@
 const ToDO = require('../models/models');
 
 class TaskController {
+
     findAll() {
-        return ToDO.allTasks();
+        return ToDO.findAll();
     }
 
-    findSingle(taskId) {
-
-        return ToDO.singleTask(taskId);
+    findList(listId) {
+        return ToDO.findList(listId);
     }
 
-    addNewPost(newTask) {
+    findTask(taskId, listId) {
 
-        return ToDO.createTask(newTask);
+        return ToDO.findTask(taskId, listId);
     }
 
-    updateTask(taskId, NewUpdateTask) {
-
-        return ToDO.update(taskId, NewUpdateTask);
+    addNewPost(listId, newTask) {
+        return ToDO.createTask(listId, newTask);
     }
 
-    changeTask(taskId, newTask){
+    updateTask(taskId, listId, NewUpdateTask) {
 
-        return ToDO.changeTask(taskId, newTask)
+        return ToDO.update(taskId, listId, NewUpdateTask);
     }
 
-    deleteTask(taskId) {
+    changeTask(taskId, listId, newTask){
 
-        return ToDO.delete(taskId)
+        return ToDO.changeTask(taskId, listId, newTask)
+    }
+
+    deleteList(listId) {
+
+        return ToDO.deleteList(listId)
     }
 }
 
