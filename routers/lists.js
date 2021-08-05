@@ -2,43 +2,54 @@ const router = require('express').Router()
 const controller = require('../controllers/taskController');
 
 function read() {
-
+    
     router.get('/', function (req, res) {
-        // console.log(req.params.id);
-        // console.log(req.params.listId);
-
         let showAll = controller.findAll()
         res.send(showAll)
+    });    
+
+    
+    router.get('/:listId/tasks', function (req, res) {
+        let showAll = controller.findList(req.params.listId)
+       
+        if (Number.isInteger(showAll))
+            res.sendStatus(showAll)
+        else    
+            res.send(showAll)
     });
 
-    router.get('/:id', function (req, res) {
-        let showSingle = controller.findSingle(req.params.id)
+    router.get('/:listId/tasks/:id', function (req, res) {
+        let showSingle = controller.findTask(req.params.id, req.params.listId)
         res.send(showSingle)
     });
 }
 
 function write() {
 
-    router.post('/', function (req, res) {
-        let newPost = controller.addNewPost(req.body)
+    router.post('/:listId/tasks', function (req, res) {
+        let newPost = controller.addNewPost(req.params.listId,req.body)
         res.send(newPost)
     });
 
-    router.patch('/:id', function (req, res) {
-        let update = controller.updateTask(req.params.id, req.body)
+    router.patch('/:listId/tasks/:id', function (req, res) {
+        let update = controller.updateTask(req.params.id, req.params.listId, req.body)
         res.send(update)
     });
 
-    router.put('/:id', function (req, res){
-        let changeTask = controller.changeTask(req.params.id, req.body)
+    router.put('/:listId/tasks/:id', function (req, res){
+        let changeTask = controller.changeTask(req.params.id, req.params.listId, req.body)
         res.send(changeTask)
     })
 
-    router.delete('/:id', function (req, res) {
-        let del = controller.deleteTask(req.params.id)
+    router.delete('/:listId/tasks/:id', function (req, res) {
+        let del = controller.deleteTask(req.params.id, req.params.listId)
         res.send(del);
     });
 
+    router.delete('/:listId', function (req, res) {
+        let del = controller.deleteList(req.params.listId)
+        res.send(del);
+    });
 }
 
 function crud() {
