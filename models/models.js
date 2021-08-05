@@ -28,6 +28,12 @@ class ToDO {
         todoitems.push(newitem);
     }
 
+    changeTask(taskId, newTask) {
+        let taskIdInt = parseInt(taskId)
+        let newList = Object.assign({id: taskIdInt}, newTask)
+        todoitems[taskId-1] = newList
+    }
+
     update(taskId, NewUpdateTask) {
 
         let taskIdInt = parseInt(taskId);
@@ -36,9 +42,9 @@ class ToDO {
         return updateItem;
     }
 
-    delete(taskId){
+    delete(taskId) {
         let taskIdInt = parseInt(taskId);
-        todoitems.splice(taskIdInt-1,1);
+        todoitems.splice(taskIdInt - 1, 1);
         console.log(todoitems);
         return todoitems
     }
