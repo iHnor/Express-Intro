@@ -1,21 +1,29 @@
 
 const inc = (index = 0) => () => ++index
+// const genIdList = inc()
 const genId = inc()
 
-const todoitems = [
-    { id: genId(), name: 'Test task', done: false },
-    { id: genId(), name: 'We create new task', done: false }
+const toDoItem = [
+    {idList: genIdList(), tasks: [{ id: genId(), name: 'Test task', done: false }]}
+    // { id: genId(), name: 'We create new task', done: false },
+    // { id: genId(), name: 'We create new task', done: false }
 ]
 
 
 class ToDO {
+    List;
+
+    constructor(List){
+        this.List = List;
+    }
+
     allTasks() {
-        return todoitems
+        return this.List
     }
 
     singleTask(taskId) {
         let taskIdInt = parseInt(taskId);
-        let task = todoitems.find(t => t.id === taskIdInt);
+        let task = this.List.find(t => t.id === taskIdInt);
         return task
     }
 
@@ -25,29 +33,31 @@ class ToDO {
             name: data.name,
             done: false
         };
-        todoitems.push(newitem);
+        this.List.push(newitem);
     }
 
     changeTask(taskId, newTask) {
         let taskIdInt = parseInt(taskId)
         let newList = Object.assign({id: taskIdInt}, newTask)
-        todoitems[taskId-1] = newList
+        this.List[taskId-1] = newList
     }
 
     update(taskId, NewUpdateTask) {
 
         let taskIdInt = parseInt(taskId);
-        let updateItem = todoitems.find(t => t.id === taskIdInt);
+        let updateItem = this.List.find(t => t.id === taskIdInt);
         Object.assign(updateItem, NewUpdateTask);
         return updateItem;
     }
 
     delete(taskId) {
         let taskIdInt = parseInt(taskId);
-        todoitems.splice(taskIdInt - 1, 1);
-        console.log(todoitems);
-        return todoitems
+        this.List.splice(taskIdInt - 1, 1);
+        console.log(this.List);
+        return this.List
     }
 }
 
-module.exports = new ToDO()
+let listOut = new ToDO(toDoItem)
+
+module.exports = listOut
