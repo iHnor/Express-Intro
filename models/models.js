@@ -1,90 +1,55 @@
-
-const incList = (indexL = 0) => () => ++indexL
-const incId = (indexI = 0) => () => ++indexI
-const genIdList = incList()
-const genId = incId()
-
-const toDoItem = [
-    {
-        idList: genIdList(), tasks: [
-            { id: genId(), name: 'Test task first', done: false },
-            { id: genId(), name: 'Test tasksecond', done: false }
-        ]
-    },
-    {
-        idList: genIdList(), tasks: [
-            { id: genId(), name: 'Test text', done: false }
-        ]
-    }
-]
-
+const {Client} = require('pg')
+const config = require('./config')
 
 class ToDO {
-    List;
-
-    constructor(List) {
-        this.List = List;
+    async findAll(){
+        const client = new Client(config);
+        client.connect();
+        let sqlComand = await client.query('SELECT task, done, id FROM items');
+        return sqlComand.rows;
     }
 
-    findAll(){
-        return toDoItem
+    async findList(listId) {
+        const client = new Client(config);
+        client.connect();
+        let sqlComand = await client.query('SELECT task, done, id FROM items WHERE "group"=$1;', [listId])
+        return sqlComand.rows;
     }
 
-    findList(listId) {
-        if (toDoItem.length < listId)
-            return 404
-        let allTasks = this.List[listId - 1]
-        return allTasks.tasks
+    // Функція на виведеня конкретної вибраної задачі з вибраного списку
+
+    async createTask(listId, data) {
+        const client = new Client(config);
+        client.connect();
+        await client.query('INSERT INTO items (task, done, "group") VALUES ($1, false, $2);', [ data['name'], listId])
     }
 
-    findTask(taskId, listId) {
-        let getTask = this.List[+listId - 1].tasks
-        return getTask[+taskId - 1]
+    async update(taskId, listId, NewUpdateTask) {
+        const client = new Client(config);
+        client.connect();
+        await client.query('UPDATE items SET task = $1 WHERE "group" = $2;', [])
+        // Створить нову бібліотеку в якій назви стовпчиків - назви групок, а рядки - це унікальні номерки кожного Task`s
+        // Розробить заміну елемента по індексу групи ----> по індексу елемента в даній групі
     }
 
-    createTask(listId, data) {
-
-        if (toDoItem.length < listId) {
-            let newList = {
-                idList: genIdList(),
-                tasks: {
-                    id: genId(),
-                    name: data.name,
-                    done: false
-                }
-            };
-            this.List.push(newList)
-        }
-        else { 
-            let newList = {
-                id: genId(),
-                name: data.name,
-                done: false   
-            }
-            this.List[listId-1].tasks.push(newList);    
-        }
+    async changeTask(taskId, listId, newTask) {
+        const client = new Client(config);
+        client.connect();
     }
 
-    update(taskId, listId, NewUpdateTask) {
-        let updateItem = this.List[+listId-1].tasks
-        Object.assign(updateItem[+taskId], NewUpdateTask);
-        return updateItem;
+    async rewriteTask(listId, id, body) {
+        const client = new Client(config);
+        client.connect();
+        // return client.query('UPDAE public.tasks SET done=$1, name=$2 WHERE tasks.id=$3', [body.done, body.name, +body.id])
     }
 
-    changeTask(taskId, listId, newTask) {
-        let newList = Object.assign({ id: +listId }, newTask)
-        this.List[listId - 1].tasks[+taskId] = newList
-    }
-
-    deleteTask(taskId, listId) {
-        this.List[+listId-1].tasks.splice(+taskId - 1, 1);
-    }
-
-    deleteList(listId){
-        this.List.splice(+listId - 1, 1)
+    async deleteTask(listId, taskId) {
+        const client = new Client(config);
+        client.connect();
+        // return client.query('DELETE FROM public.tasks WHERE tasks.id=$1;', [+taskId])
     }
 }
 
-let listOut = new ToDO(toDoItem)
-
+let listOut = new ToDO()
+    
 module.exports = listOut
