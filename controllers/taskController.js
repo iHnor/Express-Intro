@@ -24,9 +24,9 @@ class TaskController {
         return ToDO.update(taskId, NewUpdateTask);
     }
 
-    changeTask(taskId, listId, newTask){
+    changeTask(taskId, newTask){
 
-        return ToDO.changeTask(taskId, listId, newTask)
+        return ToDO.changeTask(taskId, newTask)
     }
 
     deleteTask(taskId){
