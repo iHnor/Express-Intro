@@ -36,22 +36,22 @@ function write() {
         });
     });
 
-    router.patch('/:listId/tasks/:id', function (req, res) {
-        controller.updateTask(req.params.id, req.params.listId, req.body)
+    router.patch('/:id/updata', function (req, res) {
+        controller.updateTask(req.params.id, req.body)
         .then(data => {
             res.send(data)
         });
     });
 
-    router.put('/:listId/tasks/:id', function (req, res){
-        controller.changeTask(req.params.id, req.params.listId, req.body)
+    router.put('/:id/change', function (req, res){
+        controller.changeTask(req.params.id, req.body)
         .then(data => {
             res.send(data)
         });
     })
 
-    router.delete('/:listId/tasks/:id', function (req, res) {
-        controller.deleteTask(req.params.id, req.params.listId)
+    router.delete('/:taskId/del', function (req, res) {
+        controller.deleteTask(req.params.taskId)
         .then(data => {
             res.send(data)
         });

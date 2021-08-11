@@ -19,14 +19,18 @@ class TaskController {
         return ToDO.createTask(listId, newTask);
     }
 
-    updateTask(taskId, listId, NewUpdateTask) {
+    updateTask(taskId, NewUpdateTask) {
 
-        return ToDO.update(taskId, listId, NewUpdateTask);
+        return ToDO.update(taskId, NewUpdateTask);
     }
 
     changeTask(taskId, listId, newTask){
 
         return ToDO.changeTask(taskId, listId, newTask)
+    }
+
+    deleteTask(taskId){
+        return ToDO.deleteTask(taskId)
     }
 
     deleteList(listId) {

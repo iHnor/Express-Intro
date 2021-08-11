@@ -1,55 +1,69 @@
-const {Client} = require('pg')
+const { Client } = require('pg')
 const config = require('./config')
 
 class ToDO {
-    async findAll(){
+
+    async findAll() {
         const client = new Client(config);
         client.connect();
-        let sqlComand = await client.query('SELECT task, done, id FROM items');
+        let sqlComand = await client.query('SELECT text, done, id FROM tasks');
         return sqlComand.rows;
     }
 
     async findList(listId) {
         const client = new Client(config);
         client.connect();
-        let sqlComand = await client.query('SELECT task, done, id FROM items WHERE "group"=$1;', [listId])
+        let sqlComand = await client.query('SELECT task, done FROM tasks  RIGHT JOIN "group" ON tasks.list_id = group.id WHERE tasks.list_id = $1', [listId])
         return sqlComand.rows;
     }
 
-    // Функція на виведеня конкретної вибраної задачі з вибраного списку
+    async findTask(taskId, listId) {
+        const client = new Client(config);
+        client.connect();
+        let sqlComand = await client.query('SELECT task, done FROM tasks  RIGHT JOIN "group" ON tasks.list_id = groups.id WHERE tasks.list_id = $1', [listId])
+        return sqlComand.rows[+taskId - 1]
+    }
 
     async createTask(listId, data) {
         const client = new Client(config);
         client.connect();
-        await client.query('INSERT INTO items (task, done, "group") VALUES ($1, false, $2);', [ data['name'], listId])
+        let hasId =  await client.query('SELECT id FROM "group" WHERE id = $1', [+listId]);
+        await client.query('INSERT INTO tasks (task, done, list_id) VALUES ($1, false, $2);', [data['name'], +listId]);
+        if (hasId.rows.length == 0)
+            await client.query('INSERT INTO "group" (id) VALUES ($1) ;', [ +listId]);
     }
 
-    async update(taskId, listId, NewUpdateTask) {
+    async update(taskId, NewUpdateTask) {
         const client = new Client(config);
         client.connect();
-        await client.query('UPDATE items SET task = $1 WHERE "group" = $2;', [])
-        // Створить нову бібліотеку в якій назви стовпчиків - назви групок, а рядки - це унікальні номерки кожного Task`s
-        // Розробить заміну елемента по індексу групи ----> по індексу елемента в даній групі
+        await client.query('UPDATE tasks SET task = $1 WHERE id = $2;', [NewUpdateTask['name'], taskId])
     }
 
-    async changeTask(taskId, listId, newTask) {
-        const client = new Client(config);
-        client.connect();
-    }
+    // async changeTask(taskId, listId, newTask) {
+    //     const client = new Client(config);
+    //     client.connect();
+    // }
 
-    async rewriteTask(listId, id, body) {
+    async deleteTask(taskId) {
         const client = new Client(config);
         client.connect();
-        // return client.query('UPDAE public.tasks SET done=$1, name=$2 WHERE tasks.id=$3', [body.done, body.name, +body.id])
+        let hasId =  await client.query('SELECT list_id from tasks WHERE list_id = $1', [+taskId]);
+        console.log(hasId.rows.length);
+        if (hasId.rows.length == 0){
+            let listId =  await client.query('SELECT list_id from tasks WHERE id = $1;', [+taskId])
+            console.log(listId);
+            // await client.query('DELETE FROM "group" WHERE id = $1;', [+listId])
+        }
+        await client.query('DELETE FROM tasks WHERE id = $1;', [+taskId])
     }
-
-    async deleteTask(listId, taskId) {
+    async deleteList(listId){
         const client = new Client(config);
         client.connect();
-        // return client.query('DELETE FROM public.tasks WHERE tasks.id=$1;', [+taskId])
+        await client.query('DELETE FROM tasks WHERE list_id = $1;', [listId])
+        await client.query('DELETE FROM "group" WHERE id = $1;;', [listId])  
     }
 }
 
 let listOut = new ToDO()
-    
+
 module.exports = listOut
