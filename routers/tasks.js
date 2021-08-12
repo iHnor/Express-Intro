@@ -4,18 +4,24 @@ const controller = require('../controllers/taskController');
     
 router.get('/', function (req, res) {
     console.log(req.query);
-    let showRezult
     if (req.query.hasOwnProperty('listId') && req.query.hasOwnProperty('taskId'))
-        showRezult = controller.findTask(req.query['listId'], req.query['taskId'])
+        controller.findTask(req.query['taskId'], req.query['listId'])
+        .then(data => {
+            res.send(data)
+        });
     else {
         if (req.query.hasOwnProperty('listId')){
-            showRezult = controller.findList(req.query['listId'])
+            controller.findList(req.query['listId'])
+            .then(data => {
+                res.send(data)
+            });
         }
         else 
-            showRezult = controller.findAll()
+            controller.findAll()
+            .then(data => {
+                res.send(data)
+            });
     }
-     
-    res.send(showRezult)
 });    
 
 module.exports = router;
