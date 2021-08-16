@@ -60,16 +60,20 @@ class ToDO {
     }
 
     async todayTasks() {
-        let res = {};
-        
-        res.d1 = await this.getRes1();
-        res.d2 = await this.getRes2();
-
-        return res;
-
+        let count = await knex('tasks')
+            .count('task', { as: 'Today`s tasks' })
+            .whereBetween('date', [todayDate(), todayDate()]);;
+        let lists = await knex
+            .from('tasks')
+            .count('done', { as: 'Unfinished tasks in list' })
+            .rightJoin('group', 'tasks.list_id', 'group.id')
+            .where('done', '=', 'false')
+            .groupByRaw('list_id'); 
+        let result = count.concat(lists);
+        return result;   
     }
 
-    async getRes1() {
+/*     async getRes1() {
         return knex('tasks')
             .count('task')
             .whereBetween('date', [todayDate(), todayDate()])
@@ -84,17 +88,17 @@ class ToDO {
         .count('done', { as: 'False_tasks' })
         .where('done', '=', 'false')
 
-        
         .then((date2 => {
             console.log(date2);
             return date2;
         }))
-    }
+    } */
     
 
     async collectTodey() {
         return knex('tasks')
             .select('list_id', 'task', 'date')
+            .join('group', 'tasks.list_id', '=', 'group.id')
             .where('date', '=', todayDate());
     }
 

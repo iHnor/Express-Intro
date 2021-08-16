@@ -13,12 +13,12 @@ function read() {
             });
     });
 
-    router.get('/status', function (req, res) {
+    /* router.get('/status', function (req, res) {
         controller.unDone()
             .then(data => {
                 res.send(data);
             });
-    });
+    }); */
 }
 
 read();
