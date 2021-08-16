@@ -36,7 +36,8 @@ function write() {
         });
     });
 
-    router.patch('/:id/update', function (req, res) {
+    router.patch('/:id', function (req, res) {
+
         controller.updateTask(req.params.id, req.body)
         .then(data => {
             res.send(data)

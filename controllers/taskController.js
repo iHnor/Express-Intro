@@ -37,6 +37,16 @@ class TaskController {
 
         return ToDO.deleteList(listId)
     }
+
+    todayTasks(){ 
+        return ToDO.todayTasks()
+    }
+    unDone(){
+        return ToDO.unDone()
+    }
+    collectTodey(){
+        return ToDO.collectTodey()
+    }
 }
 
 module.exports = new TaskController()
