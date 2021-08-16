@@ -1,8 +1,8 @@
 const config = {
     host: 'localhost',
-    user: 'todo',
+    user: 'todolist',
     password: '12341234qs',
-    database: 'todolist',
+    database: 'todo'
 };
 
 module.exports = config;
