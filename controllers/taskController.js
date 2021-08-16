@@ -33,11 +33,6 @@ class TaskController {
         return ToDO.deleteTask(taskId)
     }
 
-    deleteList(listId) {
-
-        return ToDO.deleteList(listId)
-    }
-
     todayTasks(){ 
         return ToDO.todayTasks()
     }

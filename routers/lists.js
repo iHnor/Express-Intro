@@ -36,30 +36,29 @@ function write() {
         });
     });
 
-    router.patch('/:id', function (req, res) {
-
+    router.patch('/:listId/tasks/:id', function (req, res) {
+        console.log(req.body);
         controller.updateTask(req.params.id, req.body)
-        .then(data => {
-            res.send(data)
+        .then(() => {
+            controller.findTask(req.params.id, req.params.listId)
+            .then(data => {
+                res.send(data)
+            })
         });
     });
 
-    router.put('/:id/change', function (req, res){
+    router.put('/:listId/tasks/:id', function (req, res){
         controller.changeTask(req.params.id, req.body)
-        .then(data => {
-            res.send(data)
+        .then(() => {
+            controller.findTask(req.params.id, req.params.listId)
+            .then(data => {
+                res.send(data)
+            })
         });
     })
 
-    router.delete('/:taskId/del', function (req, res) {
+    router.delete('/:taskId', function (req, res) {
         controller.deleteTask(req.params.taskId)
-        .then(data => {
-            res.send(data)
-        });
-    });
-
-    router.delete('/:listId', function (req, res) {
-        controller.deleteList(req.params.listId)
         .then(data => {
             res.send(data)
         });

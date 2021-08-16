@@ -5,9 +5,11 @@ const controller = require('../controllers/taskController');
 
 function read() {
     router.get('/today', function (req, res) {
-        controller.todayTasks()
+        controller.todayTasks() // dashboard
             .then(data => {
-                res.send(data[0].count + ' tasks for today');
+                console.log(data);
+                // res.send(data[0].count + ' tasks for today');
+                res.send(data);
             });
     });
 
