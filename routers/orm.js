@@ -1,41 +1,29 @@
 const router = require('express').Router()
-const controller = require('../controllers/taskController');
+const controller = require('../controllers/taskControllerORM');
 
 function read() {
-    
-    router.get('/', function (req, res) {
-        controller.findAll()
+    router.get('/:listId/tasks/', function (req, res) {
+        controller.findList(req.params.listId)
         .then(data => {
             res.send(data);
         });
-            
-    });    
-
-    
-    router.get('/:listId/tasks', function (req, res) {
-        controller.findList(req.params.listId)
-        .then(data => {
-            res.send(data)
-        });
     });
 
-    router.get('/:listId/tasks/:id', function (req, res) {
-        controller.findTask(req.params.id, req.params.listId)
+    router.get('/tasks/:id', function (req, res) {
+        controller.findTask(req.params.id)
         .then(data => {
-            res.send(data)
+            res.send(data);
         });
     });
 }
 
 function write() {
-
     router.post('/:listId/tasks', function (req, res) {
         controller.addNewPost(req.params.listId,req.body)
-        .then(data => {
-            res.send(data)
+        .then((data) => {
+            res.send(data);
         });
     });
-
     router.patch('/:listId/tasks/:id', function (req, res) {
         controller.updateTask(req.params.id, req.body)
         .then(() => {
@@ -45,7 +33,6 @@ function write() {
             })
         });
     });
-
     router.put('/:listId/tasks/:id', function (req, res){
         controller.changeTask(req.params.id, req.body)
         .then(() => {
@@ -54,8 +41,7 @@ function write() {
                 res.send(data)
             })
         });
-    })
-
+    });
     router.delete('/:taskId', function (req, res) {
         controller.deleteTask(req.params.taskId)
         .then(data => {
@@ -64,11 +50,7 @@ function write() {
     });
 }
 
-function crud() {
-    read();
-    write();
-}
+read();
+write();
 
-crud();
-
-module.exports = router;
+module.exports = router
