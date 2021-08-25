@@ -4,7 +4,7 @@ const controller = require('../controllers/taskController');
 
 function read() {
     router.get('/', function (req, res) {
-        controller.collectTodey()
+        controller.collectToday()
             .then(data => {
                 res.send(data);
             });

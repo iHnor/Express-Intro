@@ -8,10 +8,6 @@ const lists = sequelize.define("group", {
         primaryKey: true,
         allowNull: false
     },
-    /* name: {
-        type: Sequelize.TEXT,
-        allowNull: false
-    } */
 });
 
 const tasks = sequelize.define("tasks", {
@@ -39,30 +35,9 @@ const tasks = sequelize.define("tasks", {
     }
 });
 
-// sequelize.sync().then(result => console.log(result))
-//     .catch(err => {
-//         console.log('err');
-//         console.log(err);
-//     });
-
-// lists.hasMany(tasks, { onDelete: "cascade" }); // ????
 tasks.hasOne(lists);
 
-class ListTodos {
-
-    /* checkExistence(listId, id) {
-        return tasks.findAll(
-            {
-                where: {
-                    list_id: +listId,
-                    id: +id
-                }
-            }).then(bool => {
-                if (bool.length > 0) {
-                    return true;
-                }
-            });
-    } */
+class ToDO_ORM {
 
    findList(listId) {
         return tasks.findAll({ where: { list_id: +listId }, raw: true }, { attributes: ['id', 'task', 'done', 'date'] })
@@ -78,64 +53,49 @@ class ListTodos {
             }).catch(err => console.log(err));       
     }
 
-   /*  addTask(listId, body) {
+    createTask(listId, data) {
         return tasks.create({
-            name: body.name,
+            task: data.task,
             list_id: +listId,
-            done: body.done,
-            due_date: body.due_date
+            done: data.done,
+            date: data.date
         }).then(res => {
-            const task = { id: res.id, name: res.name, done: res.done, due_date: res.due_date };
-            return task;
+            const task = { id: res.id, task: res.task, done: res.done, date: res.date };
+            return task; // Возврат базы даных...
         }).catch(err => console.log(err));
     }
- */
- /*   updateTask(listId, id, body) {
-        return this.checkExistence(listId, id).then(bool => {
-            if (bool) {
-                return tasks.update({ done: Boolean(body.done) }, {
-                    where: { id: +id }
-                }).then(() => {
-                    return this.displaySingle(listId, id).then((res) => {
-                        return res;
-                    });
-                });
-            }
-        });
+
+    update(listId, data) {
+        return tasks.update({ done: Boolean(data.done) }, {
+            where: { id: +listId }
+        })
     }
 
-    rewriteTask(listId, id, body) {
-        return this.checkExistence(listId, id).then(bool => {
-            if (bool) {
-                return tasks.update({ done: Boolean(body.done), name: body.name, due_date: body.due_date }, {
-                    where: { id: +id }
-                }).then(() => {
-                    return this.displaySingle(listId, id).then((res) => {
-                        return res;
-                    });
-                });
+    changeTask( taskId, date) {
+        let newTask = date.task ?? 'Default task';
+        let newDone = date.done ?? false;
+        let newDate = date.date ?? todayDate();
+        return tasks.update({ done: Boolean(newDone), task: newTask, date: newDate }, {
+            where: { id: +taskId }
+        })
+    }    
+
+    deleteTask(taskId) {
+        return tasks.destroy({
+            where: {
+                id: +taskId
             }
-        });
+        })
     }
-
-    deleteTask(listId, id) {
-        return this.checkExistence(listId, id).then(bool => {
-            if (bool) {
-                return tasks.destroy({
-                    where: {
-                        id: +id
-                    }
-                }).then(() => {
-                    return this.displayAll(listId).then((res) => {
-                        return res;
-                    });
-                });
-            }
-        });
-    } */
-
 }
 
-const List_orm = new ListTodos();
+function todayDate() {
+    let date = new Date();
+    let month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : `${date.getMonth() + 1}` 
+    let day = date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`
+    return `${date.getFullYear()}-${month}-${day}`;
+}
+
+const List_orm = new ToDO_ORM();
 
 module.exports = List_orm;

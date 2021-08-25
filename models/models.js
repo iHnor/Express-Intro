@@ -73,6 +73,28 @@ class ToDO {
         return result;   
     }
 
+
+
+    async collectToday() {
+        return knex('tasks')
+            .select('list_id', 'task', 'date')
+            .join('group', 'tasks.list_id', '=', 'group.id')
+            .where('date', '=', todayDate());
+    }
+
+
+}
+
+function todayDate() {
+    let date = new Date();
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+}
+
+let listOut = new ToDO()
+
+module.exports = listOut
+
+
 /*     async getRes1() {
         return knex('tasks')
             .count('task')
@@ -94,22 +116,3 @@ class ToDO {
         }))
     } */
     
-
-    async collectTodey() {
-        return knex('tasks')
-            .select('list_id', 'task', 'date')
-            .join('group', 'tasks.list_id', '=', 'group.id')
-            .where('date', '=', todayDate());
-    }
-
-
-}
-
-function todayDate() {
-    let date = new Date();
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-}
-
-let listOut = new ToDO()
-
-module.exports = listOut

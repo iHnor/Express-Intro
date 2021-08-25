@@ -42,10 +42,13 @@ function write() {
             })
         });
     });
-    router.delete('/:taskId', function (req, res) {
+    router.delete('/:listId/task/:taskId', function (req, res) {
         controller.deleteTask(req.params.taskId)
-        .then(data => {
-            res.send(data)
+        .then(() => {
+            controller.findList(req.params.listId)
+            .then(data => {
+                res.send(data)
+            })
         });
     });
 }

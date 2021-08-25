@@ -39,8 +39,8 @@ class TaskController {
     unDone(){
         return ToDO.unDone()
     }
-    collectTodey(){
-        return ToDO.collectTodey()
+    collectToday(){
+        return ToDO.collectToday()
     }
 }
 
